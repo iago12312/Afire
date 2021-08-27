@@ -31,7 +31,7 @@ $endc$enda""";
 
 # Creation of user
 printf "\n\nCreating user " >&2
-if sudo useradd -m america &> /dev/null
+if sudo useradd -m linux &> /dev/null
 then
   printf "\ruser created $endc$enda\n" >&2
 else
@@ -40,10 +40,10 @@ else
 fi
 
 # Add user to sudo group
-sudo adduser america sudo
+sudo adduser linux sudo
 
 # Set password of user to 'root'
-echo 'america:root' | sudo chpasswd
+echo 'linux:root' | sudo chpasswd
 
 # Change default shell from sh to bash
 sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd
@@ -84,8 +84,58 @@ printf "$g$b    Installing Desktop Environment $endc$enda" >&2
 printf "\r$c$b    Desktop Environment Installed $endc$enda\n" >&2 ||
 { printf "\r$r$b    Error Occured $endc$enda\n" >&2; exit; }
 
+
+
+# Install Google Chrome
+printf "$g$b    Installing Google Chrome $endc$enda" >&2
+{
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    sudo dpkg --install google-chrome-stable_current_amd64.deb
+    sudo apt install --assume-yes --fix-broken
+} &> /dev/null &&
+printf "\r$c$b    Google Chrome Installed $endc$enda\n" >&2 ||
+printf "\r$r$b    Error Occured $endc$enda\n" >&2
+
+
+
+# Install CrossOver (Run exe on linux)
+printf "$g$b    Installing CrossOver $endc$enda" >&2
+{
+    wget https://media.codeweavers.com/pub/crossover/cxlinux/demo/crossover_20.0.4-1.deb
+    sudo dpkg -i crossover_20.0.4-1.deb
+    sudo apt install --assume-yes --fix-broken
+} &> /dev/null &&
+printf "\r$c$b    CrossOver Installed $endc$enda\n" >&2 ||
+printf "\r$r$b    Error Occured $endc$enda\n" >&2
+
+
+# Install VLC Media Player 
+printf "$g$b    Installing VLC Media Player $endc$enda" >&2
+{
+    sudo apt install vlc -y
+} &> /dev/null &&
+printf "\r$c$b    VLC Media Player Installed $endc$enda\n" >&2 ||
+printf "\r$r$b    Error Occured $endc$enda\n" >&2
+
+# Install other tools like nano
+sudo apt-get install gdebi -y &> /dev/null
+sudo apt-get install vim -y &> /dev/null
+printf "$g$b    Installing other Tools $endc$enda" >&2
+if sudo apt install nautilus nano -y &> /dev/null
+then
+    printf "\r$c$b    Other Tools Installed $endc$enda\n" >&2
+else
+    printf "\r$r$b    Error Occured $endc$enda\n" >&2
+fi
+
+
+
+printf "\n$g$b    Installation Completed $endc$enda\n\n" >&2
+
+
+
 # Adding user to CRP group
-sudo adduser america chrome-remote-desktop
+sudo adduser linux chrome-remote-desktop
 
 # Finishing Work
 printf '\nvisit http://remotedesktop.google.com/headless and copy the debian linux command after authentication\n'
